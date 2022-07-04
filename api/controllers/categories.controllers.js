@@ -1,6 +1,6 @@
 const { selectAllCategories } = require("../models/categories.models");
 
-exports.getCategories = (req, res, next) => {
+exports.getCategories = (req, res) => {
   selectAllCategories()
     .then((categories) => {
       res.status(200).send(categories);
@@ -9,3 +9,4 @@ exports.getCategories = (req, res, next) => {
       next(err);
     });
 };
+
