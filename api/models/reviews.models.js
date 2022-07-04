@@ -1,7 +1,7 @@
 const connection = require("../../db/connection");
 
 exports.selectReviewById = (reviewId) => {
-  //console.log(reviewId)
+
   return connection
     .query(
       `
@@ -11,6 +11,12 @@ exports.selectReviewById = (reviewId) => {
       [reviewId]
     )
     .then((result) => {
+        if (result.rowCount === 0){
+            return Promise.reject({
+                status: 404,
+                msg: `Review ${reviewId} does not exist`
+            });
+        }
       return result.rows[0];
     });
 };

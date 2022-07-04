@@ -32,10 +32,10 @@ describe("GET /api/categories", () => {
 
   test("404: bad request ", () => {
     return request(app)
-      .get("/api/categoriez")
+      .get("/api/reviews/99999")
       .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid path");
+      .then((body) => {
+        expect(body.text).toBe("Review 99999 does not exist");
       });
   });
 });
@@ -84,4 +84,14 @@ describe("GET /api/reviews/:review_id", () => {
         });
       });
   });
-});
+
+  });
+  test("404: bad request if given review that doesnt exist", () => {
+    return request(app)
+      .get("/api/reviews/99999")
+      .expect(404)
+      .then((body) => {
+        expect(body.text).toBe("Review 99999 does not exist");
+      });
+  });
+
