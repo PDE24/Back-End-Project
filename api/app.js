@@ -5,7 +5,9 @@ const app = express();
 
 app.use(express.json());
 
+//GET
 app.get("/api/categories", getCategories);
+
 
 app.use((req, res) => {
   res.status(404).send({ msg: "Invalid path" });

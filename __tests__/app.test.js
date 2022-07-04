@@ -8,7 +8,7 @@ beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
 
-describe("/api/categories", () => {
+describe("GET /api/categories", () => {
   test("200: returns array", () => {
     return request(app)
       .get("/api/categories")
@@ -36,6 +36,17 @@ describe("/api/categories", () => {
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid path");
+      });
+  });
+});
+
+describe.only("GET /api/reviews/:review_id", () => {
+  test("200: returns an object", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Object);
       });
   });
 });
