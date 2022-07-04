@@ -49,4 +49,18 @@ describe.only("GET /api/reviews/:review_id", () => {
         expect(body).toBeInstanceOf(Object);
       });
   });
+  test("200: has correct properties", () => {
+    return request(app).get("/api/reviews/1").expect(200).then(({body}) => {
+        expect(body).toHaveProperty("review_id");
+        expect(body).toHaveProperty("title");
+        expect(body).toHaveProperty("review_body");
+        expect(body).toHaveProperty("designer");
+        expect(body).toHaveProperty("review_img_url");
+        expect(body).toHaveProperty("votes");
+        expect(body).toHaveProperty("category");
+        expect(body).toHaveProperty("owner");
+        expect(body).toHaveProperty("created_at");
+    })
+    
+  });
 });
