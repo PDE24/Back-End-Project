@@ -14,7 +14,7 @@ describe("/api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        expect(body).toBeInstanceof(Array);
+        expect(body).toBeInstanceOf(Array);
       });
   });
   test("200: array contains objects with slug and decription keys", () => {
@@ -27,6 +27,15 @@ describe("/api/categories", () => {
           expect(category).toHaveProperty("slug");
           expect(category).toHaveProperty("description");
         });
+      });
+  });
+
+  test("404: bad request ", () => {
+    return request(app)
+      .get("/api/categoriez")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid path");
       });
   });
 });
