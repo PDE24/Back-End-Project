@@ -1,6 +1,5 @@
 const connection = require("../../db/connection");
 
-
 exports.selectReviewById = (reviewId) => {
   return connection
     .query(

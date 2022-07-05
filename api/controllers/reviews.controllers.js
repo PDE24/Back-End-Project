@@ -20,7 +20,7 @@ exports.patchReviewVotes = (req, res, next) => {
 
   updateReviewVotes(review_id, updateBy)
     .then((review) => {
-      res.status(202).send({ review });
+      res.status(200).send({ review });
     })
     .catch((err) => {
       next(err);

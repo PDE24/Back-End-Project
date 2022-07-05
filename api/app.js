@@ -6,7 +6,10 @@ const {
   handle500Errors,
   handlePSQLErrors,
 } = require("./controllers/error_handling.controller");
-const { getReviewById, patchReviewVotes } = require("./controllers/reviews.controllers");
+const {
+  getReviewById,
+  patchReviewVotes,
+} = require("./controllers/reviews.controllers");
 
 const app = express();
 

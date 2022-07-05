@@ -103,12 +103,12 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 describe("PATCH /api/reviews/:review_id", () => {
-  test("202: returns object with correct keys and values", () => {
+  test("200: returns object with correct keys and values", () => {
     const newVote = { inc_votes: 1 };
 
     return request(app)
       .patch("/api/reviews/1")
-      .expect(202)
+      .expect(200)
       .send(newVote)
       .then(({ body: { review } }) => {
         expect(review).toEqual(
@@ -127,23 +127,23 @@ describe("PATCH /api/reviews/:review_id", () => {
       });
   });
 
-  test("202: accepts positive number request { inc_votes : 1 }  and updates specified review votes", () => {
+  test("200: accepts positive number request { inc_votes : 1 }  and updates specified review votes", () => {
     const newVote = { inc_votes: 1 };
 
     return request(app)
       .patch("/api/reviews/1")
-      .expect(202)
+      .expect(200)
       .send(newVote)
       .then(({ body: { review } }) => {
         expect(review).toHaveProperty("votes", 2);
       });
   });
-  test("202: accepts negative number and decrements the vote count", () => {
+  test("200: accepts negative number and decrements the vote count", () => {
     const newVote = { inc_votes: -3 };
 
     return request(app)
       .patch("/api/reviews/3")
-      .expect(202)
+      .expect(200)
       .send(newVote)
       .then(({ body: { review } }) => {
         expect(review).toHaveProperty("votes", 2);
@@ -160,7 +160,7 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("Review 99999 does not exist");
       });
   });
-  test('400: when not passes review_id number', () => {
+  test("400: when not passes review_id number", () => {
     const newVote = { inc_votes: -3 };
 
     return request(app)
@@ -171,8 +171,8 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("Invalid ID must be a number");
       });
   });
-  test('400: not passed a valid update object', () => {
-    const newVote = { inc_votes: 'not_valid' };
+  test("400: not passed a valid update object", () => {
+    const newVote = { inc_votes: "not_valid" };
 
     return request(app)
       .patch("/api/reviews/invalid_review_id")
