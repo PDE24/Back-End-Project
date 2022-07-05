@@ -248,4 +248,12 @@ describe("GET /api/reviews/:review_id (comment count)", () => {
         expect(review).toHaveProperty("created_at");
       });
   });
+  test("200: returned review has comment count property", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then(({ body: { review } }) => {
+        expect(review).toHaveProperty("comment_count");
+      });
+  });
 });
