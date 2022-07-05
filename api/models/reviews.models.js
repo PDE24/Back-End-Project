@@ -21,7 +21,12 @@ exports.selectReviewById = (reviewId) => {
 };
 
 exports.updateReviewVotes = (review_id, updateBy) => {
-  const sqlParams = [review_id, updateBy];
+  if (typeof updateBy !== "number") {
+    return Promise.reject({
+      status: 400,
+      msg: "Must provide a number to update votes",
+    });
+  }
 
   return connection
     .query(
@@ -31,9 +36,15 @@ exports.updateReviewVotes = (review_id, updateBy) => {
   WHERE review_id = $1
   RETURNING *
   `,
-      sqlParams
+      [review_id, updateBy]
     )
     .then((result) => {
+      if (result.rowCount === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `Review ${review_id} does not exist`,
+        });
+      }
       return result.rows[0];
     });
 };

@@ -11,7 +11,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handlePSQLErrors = (err, req, res, next) => {
-  if (err.code === "22P02") {
+   if (err.code === "22P02") {
     res.status(400).send({ msg: "Invalid ID must be a number" });
   } else {
     next(err);

@@ -160,4 +160,26 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("Review 99999 does not exist");
       });
   });
+  test('400: when not passes review_id number', () => {
+    const newVote = { inc_votes: -3 };
+
+    return request(app)
+      .patch("/api/reviews/invalid_review_id")
+      .send(newVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid ID must be a number");
+      });
+  });
+  test('400: not passed a valid update object', () => {
+    const newVote = { inc_votes: 'not_valid' };
+
+    return request(app)
+      .patch("/api/reviews/invalid_review_id")
+      .send(newVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Must provide a number to update votes");
+      });
+  });
 });
