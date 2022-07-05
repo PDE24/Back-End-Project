@@ -21,10 +21,10 @@ exports.selectReviewById = (reviewId) => {
 };
 
 exports.updateReviewVotes = (review_id, updateBy) => {
-  if (typeof updateBy !== "number") {
+  if (typeof updateBy !== "number" || updateBy.inc_votes) {
     return Promise.reject({
       status: 400,
-      msg: "Must provide a number to update votes",
+      msg: "Must provide a number to update votes { inc_votes: <number> }",
     });
   }
 

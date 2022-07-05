@@ -175,11 +175,22 @@ describe("PATCH /api/reviews/:review_id", () => {
     const newVote = { inc_votes: "not_valid" };
 
     return request(app)
-      .patch("/api/reviews/invalid_review_id")
+      .patch("/api/reviews/1")
       .send(newVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Must provide a number to update votes");
+        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
       });
   });
+  test("400: passed an update object with no inc_votes key", () => {
+    const newVote = { ink_notes: 2};
+
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(newVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
+      });
+  })
 });
