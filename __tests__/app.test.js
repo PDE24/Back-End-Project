@@ -40,3 +40,35 @@ describe("GET /api/categories", () => {
 });
 
 
+describe('GET /api/users', () => {
+    test('200: returns an array', () => {
+        return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toBeInstanceOf(Array);
+      });
+    });
+    test("200: array contains objects with username, name and avatar_url keys", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body: { users } }) => {
+            users.forEach((user) => {
+              expect(typeof user).toBe("object");
+              expect(user).toHaveProperty("username");
+              expect(user).toHaveProperty("name");
+              expect(user).toHaveProperty("avatar_url");
+            });
+          });
+      });
+      test("404: handles bad paths", () => {
+        return request(app)
+          .get("/api/invalid_path")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Invalid Request");
+          });
+      });
+
+})
