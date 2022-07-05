@@ -29,13 +29,12 @@ describe("GET /api/categories", () => {
         });
       });
   });
-
-  test("404: bad request ", () => {
+  test("404: handles bad paths", () => {
     return request(app)
-      .get("/api/reviews/99999")
+      .get("/api/invalid_path")
       .expect(404)
-      .then((body) => {
-        expect(body.text).toBe("Review 99999 does not exist");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Request");
       });
   });
 });
@@ -84,14 +83,20 @@ describe("GET /api/reviews/:review_id", () => {
         });
       });
   });
-
-  });
-  test("404: bad request if given review that doesnt exist", () => {
+  test("404: review does not exist", () => {
     return request(app)
       .get("/api/reviews/99999")
       .expect(404)
-      .then((body) => {
-        expect(body.text).toBe("Review 99999 does not exist");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Review 99999 does not exist");
       });
   });
-
+  test("400: when passed not a number", () => {
+    return request(app)
+      .get("/api/reviews/not_a_number")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid ID must be a number");
+      });
+  });
+});
