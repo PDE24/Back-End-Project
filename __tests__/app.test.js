@@ -101,6 +101,16 @@ describe("GET /api/reviews/:review_id", () => {
         expect(msg).toBe("Invalid ID must be a number");
       });
   });
+  describe("Add comment count property", () => {
+    test("200: returned review has comment count property", () => {
+      return request(app)
+        .get("/api/reviews/3")
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toHaveProperty("comment_count");
+        });
+    });
+  });
 });
 describe("PATCH /api/reviews/:review_id", () => {
   test("200: returns object with correct keys and values", () => {
@@ -230,30 +240,4 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/reviews/:review_id (comment count)", () => {
-  test("200: returns review object", () => {
-    return request(app)
-      .get("/api/reviews/1")
-      .expect(200)
-      .then(({ body: { review } }) => {
-        expect(review).toBeInstanceOf(Object);
-        expect(review).toHaveProperty("review_id");
-        expect(review).toHaveProperty("title");
-        expect(review).toHaveProperty("review_body");
-        expect(review).toHaveProperty("designer");
-        expect(review).toHaveProperty("review_img_url");
-        expect(review).toHaveProperty("votes");
-        expect(review).toHaveProperty("category");
-        expect(review).toHaveProperty("owner");
-        expect(review).toHaveProperty("created_at");
-      });
-  });
-  test("200: returned review has comment count property", () => {
-    return request(app)
-      .get("/api/reviews/1")
-      .expect(200)
-      .then(({ body: { review } }) => {
-        expect(review).toHaveProperty("comment_count");
-      });
-  });
-});
+
