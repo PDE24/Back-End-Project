@@ -178,51 +178,74 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(newVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
+        expect(msg).toBe(
+          "Must provide a number to update votes { inc_votes: <number> }"
+        );
       });
   });
   test("400: passed an update object with no inc_votes key", () => {
-    const newVote = { ink_notes: 2};
+    const newVote = { ink_notes: 2 };
 
     return request(app)
       .patch("/api/reviews/1")
       .send(newVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
+        expect(msg).toBe(
+          "Must provide a number to update votes { inc_votes: <number> }"
+        );
       });
-  })
+  });
 });
 
-describe('GET /api/users', () => {
-    test('200: returns an array', () => {
-        return request(app)
+describe("GET /api/users", () => {
+  test("200: returns an array", () => {
+    return request(app)
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
         expect(users).toBeInstanceOf(Array);
       });
-    });
-    test("200: array contains objects with username, name and avatar_url keys", () => {
-        return request(app)
-          .get("/api/users")
-          .expect(200)
-          .then(({ body: { users } }) => {
-            users.forEach((user) => {
-              expect(typeof user).toBe("object");
-              expect(user).toHaveProperty("username");
-              expect(user).toHaveProperty("name");
-              expect(user).toHaveProperty("avatar_url");
-            });
-          });
+  });
+  test("200: array contains objects with username, name and avatar_url keys", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        users.forEach((user) => {
+          expect(typeof user).toBe("object");
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
       });
-      test("404: handles bad paths", () => {
-        return request(app)
-          .get("/api/invalid_path")
-          .expect(404)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("Invalid Request");
-          });
+  });
+  test("404: handles bad paths", () => {
+    return request(app)
+      .get("/api/invalid_path")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Request");
       });
+  });
+});
 
-})
+describe("GET /api/reviews/:review_id (comment count)", () => {
+  test("200: returns review object", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then(({ body: { review } }) => {
+        expect(review).toBeInstanceOf(Object);
+        expect(review).toHaveProperty("review_id");
+        expect(review).toHaveProperty("title");
+        expect(review).toHaveProperty("review_body");
+        expect(review).toHaveProperty("designer");
+        expect(review).toHaveProperty("review_img_url");
+        expect(review).toHaveProperty("votes");
+        expect(review).toHaveProperty("category");
+        expect(review).toHaveProperty("owner");
+        expect(review).toHaveProperty("created_at");
+      });
+  });
+});
