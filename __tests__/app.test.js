@@ -103,15 +103,61 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 describe("PATCH /api/reviews/:review_id", () => {
-  test("202: accepts request { inc_votes : 1 }  and updates specified review votes by 1", () => {
+  test("202: returns object with correct keys and values", () => {
     const newVote = { inc_votes: 1 };
 
     return request(app)
       .patch("/api/reviews/1")
       .expect(202)
       .send(newVote)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("votes", 2);
+      .then(({ body: { review } }) => {
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: expect.any(Number),
+            title: expect.any(String),
+            designer: expect.any(String),
+            owner: expect.any(String),
+            review_img_url: expect.any(String),
+            review_body: expect.any(String),
+            category: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+
+  test("202: accepts positive number request { inc_votes : 1 }  and updates specified review votes", () => {
+    const newVote = { inc_votes: 1 };
+
+    return request(app)
+      .patch("/api/reviews/1")
+      .expect(202)
+      .send(newVote)
+      .then(({ body: { review } }) => {
+        expect(review).toHaveProperty("votes", 2);
+      });
+  });
+  test("202: accepts negative number and decrements the vote count", () => {
+    const newVote = { inc_votes: -3 };
+
+    return request(app)
+      .patch("/api/reviews/3")
+      .expect(202)
+      .send(newVote)
+      .then(({ body: { review } }) => {
+        expect(review).toHaveProperty("votes", 2);
+      });
+  });
+  test("404: review id does not exist", () => {
+    const newVote = { inc_votes: -3 };
+
+    return request(app)
+      .patch("/api/reviews/99999")
+      .send(newVote)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Review 99999 does not exist");
       });
   });
 });
