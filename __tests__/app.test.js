@@ -104,9 +104,12 @@ describe("GET /api/reviews/:review_id", () => {
 });
 describe("PATCH /api/reviews/:review_id", () => {
   test("202: accepts request { inc_votes : 1 }  and updates specified review votes by 1", () => {
+    const newVote = { inc_votes: 1 };
+
     return request(app)
       .patch("/api/reviews/1")
       .expect(202)
+      .send(newVote)
       .then(({ body }) => {
         expect(body).toHaveProperty("votes", 2);
       });
