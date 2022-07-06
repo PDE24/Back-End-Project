@@ -81,7 +81,7 @@ describe("GET /api/reviews/:review_id", () => {
             category: "social deduction",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
-            comment_count: "3"
+            comment_count: "3",
           },
         });
       });
@@ -241,38 +241,46 @@ describe("GET /api/users", () => {
   });
 });
 
-
-describe('GET /api/reviews/:review_id/comments', () => {
-    test('200: returns an array', () => {
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("200: returns an array", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
         expect(comments).toBeInstanceOf(Array);
       });
-    });
-    test('200: array contains the correct amount of comments', () => {
-        return request(app)
+  });
+  test("200: array contains the correct amount of comments", () => {
+    return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
         expect(comments.length).toBe(3);
       });
-    });
-    test('200: comments contain the correct properties', () => {
-        return request(app)
+  });
+  test("200: comments contain the correct properties", () => {
+    return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments.length).toBeGreaterThanOrEqual(1)
+        expect(comments.length).toBeGreaterThanOrEqual(1);
         comments.forEach((comment) => {
-            expect(comment).toHaveProperty("comment_id");
-            expect(comment).toHaveProperty("votes");
-            expect(comment).toHaveProperty("created_at");
-            expect(comment).toHaveProperty("author");
-            expect(comment).toHaveProperty("body");
-            expect(comment).toHaveProperty("review_id");
-        })
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("review_id");
+        });
       });
-    });
+  });
+  test("404: review_id does not exist", () => {
+    return request(app)
+      .get("/api/reviews/11111/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Review 11111 has no comments");
+      });
+  });
+  
 });

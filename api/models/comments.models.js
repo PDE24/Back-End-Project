@@ -10,8 +10,13 @@ exports.selectCommentsByReviewId = (review_id) => {
       [review_id]
     )
     .then((result) => {
-      console.log(result);
-
+        console.log(result);
+      if (result.rowCount === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `Review ${review_id} has no comments`,
+        });
+      }
       return result.rows;
     });
 };
