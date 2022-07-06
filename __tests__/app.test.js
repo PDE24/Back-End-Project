@@ -260,6 +260,15 @@ describe("GET /api/reviews/:review_id/comments", () => {
         });
       });
   });
+  test('200: review has no comments returns empty array', () => {
+    return request(app)
+    .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
+        expect(comments).toBeInstanceOf(Array);
+      })
+  });
   test("404: review_id does not exist", () => {
     return request(app)
       .get("/api/reviews/11111/comments")
