@@ -242,28 +242,14 @@ describe("GET /api/users", () => {
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
-  test("200: returns an array", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then(({ body: { comments } }) => {
-        expect(comments).toBeInstanceOf(Array);
-      });
-  });
-  test("200: array contains the correct amount of comments", () => {
+  
+  test("200: returns array with correct amount of comments containing the correct properties", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
         expect(comments.length).toBe(3);
-      });
-  });
-  test("200: comments contain the correct properties", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then(({ body: { comments } }) => {
-        expect(comments.length).toBeGreaterThanOrEqual(1);
+        expect(comments).toBeInstanceOf(Array);
         comments.forEach((comment) => {
           expect(comment).toHaveProperty("comment_id");
           expect(comment).toHaveProperty("votes");
