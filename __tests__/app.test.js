@@ -68,7 +68,7 @@ describe("GET /api/reviews/:review_id", () => {
             category: "social deduction",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
-            comment_count: 3,
+            comment_count: "3",
           },
         });
       });
@@ -222,6 +222,53 @@ describe("GET /api/users", () => {
   });
 });
 
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  
+  test("200: returns array with correct amount of comments containing the correct properties", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(3);
+        expect(comments).toBeInstanceOf(Array);
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("review_id", 2);
+        });
+      });
+  });
+  test('200: review has no comments returns empty array', () => {
+    return request(app)
+    .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
+        expect(comments).toBeInstanceOf(Array);
+      })
+  });
+  test("404: review_id does not exist", () => {
+    return request(app)
+      .get("/api/reviews/11111/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Review 11111 does not exist");
+      });
+  });
+  test("400: review_id is not passed a number", () => {
+    return request(app)
+      .get("/api/reviews/not_a_number/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid, review_id must be a number");
+      });
+  });
+});
+
 describe("GET /api/reviews", () => {
   test("200: returns reviews with the correct properties and length", () => {
     return request(app)
@@ -258,3 +305,4 @@ describe("GET /api/reviews", () => {
       });
   });
 });
+
