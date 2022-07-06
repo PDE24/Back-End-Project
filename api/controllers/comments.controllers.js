@@ -1,7 +1,9 @@
 const { selectCommentsByReviewId } = require("../models/comments.models");
 
 exports.getCommentsByReviewId = (req, res, next) => {
-  selectCommentsByReviewId()
+  const { review_id } = req.params;
+  
+  selectCommentsByReviewId(review_id)
     .then((comments) => {
       res.status(200).send({ comments });
     })

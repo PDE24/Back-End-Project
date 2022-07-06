@@ -251,5 +251,28 @@ describe('GET /api/reviews/:review_id/comments', () => {
         expect(comments).toBeInstanceOf(Array);
       });
     });
-    
+    test('200: array contains the correct amount of comments', () => {
+        return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(3);
+      });
+    });
+    test('200: comments contain the correct properties', () => {
+        return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBeGreaterThanOrEqual(1)
+        comments.forEach((comment) => {
+            expect(comment).toHaveProperty("comment_id");
+            expect(comment).toHaveProperty("votes");
+            expect(comment).toHaveProperty("created_at");
+            expect(comment).toHaveProperty("author");
+            expect(comment).toHaveProperty("body");
+            expect(comment).toHaveProperty("review_id");
+        })
+      });
+    });
 });
