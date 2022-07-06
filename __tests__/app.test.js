@@ -22,6 +22,7 @@ describe("GET /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body: { categories } }) => {
+        expect(categories.length).toBeGreaterThanOrEqual(1);
         categories.forEach((category) => {
           expect(typeof category).toBe("object");
           expect(category).toHaveProperty("slug");
@@ -81,7 +82,7 @@ describe("GET /api/reviews/:review_id", () => {
             category: "social deduction",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
-            comment_count: "3"
+            comment_count: 3,
           },
         });
       });
@@ -223,6 +224,7 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
+        expect(users.length).toBeGreaterThanOrEqual(1);
         users.forEach((user) => {
           expect(typeof user).toBe("object");
           expect(user).toHaveProperty("username");
@@ -241,4 +243,54 @@ describe("GET /api/users", () => {
   });
 });
 
-
+describe("GET /api/reviews", () => {
+  test("200: returns an array", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeInstanceOf(Array);
+      });
+  });
+  test("200: returns an array of the correct length", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBe(13);
+      });
+  });
+  test("200: reviews have the correct properties", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBeGreaterThanOrEqual(1);
+        reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200: reviews are sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBeGreaterThanOrEqual(1);
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
