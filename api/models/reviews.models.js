@@ -14,7 +14,6 @@ exports.selectReviewById = (reviewId) => {
       [reviewId]
     )
     .then((result) => {
-      console.log(result.rows);
       if (result.rowCount === 0) {
         return Promise.reject({
           status: 404,
