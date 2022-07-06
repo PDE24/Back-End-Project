@@ -282,5 +282,12 @@ describe("GET /api/reviews/:review_id/comments", () => {
         expect(msg).toBe("Review 11111 has no comments");
       });
   });
-  
+  test("400: review_id is not passed a number", () => {
+    return request(app)
+      .get("/api/reviews/not_a_number/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid, review_id must be a number");
+      });
+  });
 });
