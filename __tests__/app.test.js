@@ -22,6 +22,7 @@ describe("GET /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body: { categories } }) => {
+        expect(categories.length).toBeGreaterThanOrEqual(1);
         categories.forEach((category) => {
           expect(typeof category).toBe("object");
           expect(category).toHaveProperty("slug");
@@ -223,6 +224,7 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
+        expect(users.length).toBeGreaterThanOrEqual(1);
         users.forEach((user) => {
           expect(typeof user).toBe("object");
           expect(user).toHaveProperty("username");
@@ -263,6 +265,7 @@ describe("GET /api/reviews", () => {
       .get("/api/reviews")
       .expect(200)
       .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBeGreaterThanOrEqual(1);
         reviews.forEach((review) => {
           expect(review).toEqual(
             expect.objectContaining({
@@ -286,6 +289,7 @@ describe("GET /api/reviews", () => {
       .get("/api/reviews")
       .expect(200)
       .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBeGreaterThanOrEqual(1);
         expect(reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
