@@ -270,7 +270,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
           expect(comment).toHaveProperty("created_at");
           expect(comment).toHaveProperty("author");
           expect(comment).toHaveProperty("body");
-          expect(comment).toHaveProperty("review_id");
+          expect(comment).toHaveProperty("review_id", 2);
         });
       });
   });
@@ -279,7 +279,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/11111/comments")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Review 11111 has no comments");
+        expect(msg).toBe("Review 11111 does not exist");
       });
   });
   test("400: review_id is not passed a number", () => {
