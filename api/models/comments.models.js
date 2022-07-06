@@ -34,4 +34,17 @@ exports.selectCommentsByReviewId = async (review_id) => {
   return comments.rows;
 };
 
-exports.insertNewReviewComment = () => {}
+exports.insertNewReviewComment = (commentToAdd, reviewId) => {
+    const {username, body} = commentToAdd;
+    return connection.query(`
+    INSERT INTO comments
+        (author, body, review_id)
+    VALUES
+        ($1, $2, $3)
+    RETURNING *
+    `,
+    [username, body, reviewId]
+    ).then((postedComment)=> {
+        return postedComment.rows[0];
+    })
+}

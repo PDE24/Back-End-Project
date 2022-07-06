@@ -16,9 +16,16 @@ exports.getCommentsByReviewId = (req, res, next) => {
 };
 
 exports.postNewReviewComment = (req, res, next) => {
-  const { commentToAdd } = req.params;
+  const commentToAdd = req.body;
+  const { review_id } = req.params 
+  
 
-  insertNewReviewComment().then((postedComment) => {
-    res.status(201).send({ postedComment });
-  });
+  insertNewReviewComment(commentToAdd, review_id)
+    .then((postedComment) => {
+        console.log(postedComment, "<<<<< controller");
+      res.status(201).send({ postedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
