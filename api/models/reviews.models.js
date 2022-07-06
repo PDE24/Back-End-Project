@@ -1,16 +1,20 @@
 const connection = require("../../db/connection");
 
 exports.selectReviewById = (reviewId) => {
-  
   return connection
     .query(
       `
-    SELECT * FROM reviews
-    WHERE review_id = $1
+      SELECT reviews.*, COUNT(comments.review_id) AS COMMENT_COUNT
+      FROM reviews
+      LEFT JOIN comments
+      ON comments.review_id = reviews.review_id 
+      WHERE reviews.review_id = $1
+      GROUP BY reviews.review_id
     `,
       [reviewId]
     )
     .then((result) => {
+      console.log(result.rows);
       if (result.rowCount === 0) {
         return Promise.reject({
           status: 404,
