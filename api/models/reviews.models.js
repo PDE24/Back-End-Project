@@ -4,7 +4,7 @@ exports.selectReviewById = (reviewId) => {
   return connection
     .query(
       `
-      SELECT reviews.*, COUNT(comments.review_id) AS COMMENT_COUNT
+      SELECT reviews.*, COUNT(comments.review_id)::INT AS COMMENT_COUNT
       FROM reviews
       LEFT JOIN comments
       ON comments.review_id = reviews.review_id 
@@ -50,5 +50,22 @@ exports.updateReviewVotes = (review_id, updateBy) => {
         });
       }
       return result.rows[0];
+    });
+};
+
+exports.selectAllReviews = () => {
+  return connection
+    .query(
+      `
+      SELECT reviews.*, COUNT(comments.review_id)::INT AS COMMENT_COUNT
+      FROM reviews
+      LEFT JOIN comments
+      ON comments.review_id = reviews.review_id
+      GROUP BY reviews.review_id
+      ORDER BY reviews.created_at DESC
+    `
+    )
+    .then((result) => {
+      return result.rows;
     });
 };

@@ -3,9 +3,15 @@
 SELECT reviews.*, COUNT(comments.review_id) AS COMMENT_COUNT
 FROM reviews
 LEFT JOIN comments
-ON comments.review_id = reviews.review_id 
-WHERE reviews.review_id = 1
+ON comments.review_id = reviews.review_id
 GROUP BY reviews.review_id
+ORDER BY reviews.created_at DESC
+-- SELECT reviews.*, COUNT(comments.review_id) AS COMMENT_COUNT
+-- FROM reviews
+-- LEFT JOIN comments
+-- ON comments.review_id = reviews.review_id 
+-- GROUP BY reviews.review_id
+-- WHERE reviews.review_id = 1
 
 
 

@@ -9,19 +9,13 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe("GET /api/categories", () => {
-  test("200: returns array", () => {
+  test("200: returns array containing objects with slug and decription keys", () => {
     return request(app)
       .get("/api/categories")
       .expect(200)
       .then(({ body: { categories } }) => {
         expect(categories).toBeInstanceOf(Array);
-      });
-  });
-  test("200: array contains objects with slug and decription keys", () => {
-    return request(app)
-      .get("/api/categories")
-      .expect(200)
-      .then(({ body: { categories } }) => {
+        expect(categories.length).toBeGreaterThanOrEqual(1);
         categories.forEach((category) => {
           expect(typeof category).toBe("object");
           expect(category).toHaveProperty("slug");
@@ -40,19 +34,12 @@ describe("GET /api/categories", () => {
 });
 
 describe("GET /api/reviews/:review_id", () => {
-  test("200: returns an object", () => {
-    return request(app)
-      .get("/api/reviews/1")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toBeInstanceOf(Object);
-      });
-  });
-  test("200: has correct keys on the objects", () => {
+  test("200: returns object with correct keys", () => {
     return request(app)
       .get("/api/reviews/1")
       .expect(200)
       .then(({ body: { review } }) => {
+        expect(review).toBeInstanceOf(Object);
         expect(review).toHaveProperty("review_id");
         expect(review).toHaveProperty("title");
         expect(review).toHaveProperty("review_body");
@@ -210,19 +197,13 @@ describe("PATCH /api/reviews/:review_id", () => {
 });
 
 describe("GET /api/users", () => {
-  test("200: returns an array", () => {
+  test("200: returns array containing objects with username, name and avatar_url keys", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
         expect(users).toBeInstanceOf(Array);
-      });
-  });
-  test("200: array contains objects with username, name and avatar_url keys", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then(({ body: { users } }) => {
+        expect(users.length).toBeGreaterThanOrEqual(1);
         users.forEach((user) => {
           expect(typeof user).toBe("object");
           expect(user).toHaveProperty("username");
@@ -240,6 +221,7 @@ describe("GET /api/users", () => {
       });
   });
 });
+
 
 describe("GET /api/reviews/:review_id/comments", () => {
   
@@ -286,3 +268,41 @@ describe("GET /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("GET /api/reviews", () => {
+  test("200: returns reviews with the correct properties and length", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBe(13);
+        expect(reviews).toBeInstanceOf(Array);
+        reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200: reviews are sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews.length).toBeGreaterThanOrEqual(1);
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
