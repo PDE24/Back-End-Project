@@ -242,3 +242,14 @@ describe("GET /api/users", () => {
 });
 
 
+describe('GET /api/reviews/:review_id/comments', () => {
+    test('200: returns an array', () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeInstanceOf(Array);
+      });
+    });
+    
+});
