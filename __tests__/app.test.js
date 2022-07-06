@@ -295,24 +295,43 @@ describe("PATCH", () => {
 });
 
 describe("POST", () => {
-  test("201: new comment posted", () => {
-    const newComment = { username: "mallionaire", body: "I loved this game!" };
+  describe("/api/reviews/:review_id/comments", () => {
+    test("201: new comment posted", () => {
+      const newComment = {
+        username: "mallionaire",
+        body: "I loved this game!",
+      };
 
-    return request(app)
-      .post("/api/reviews/1/comments")
-      .send(newComment)
-      .expect(201)
-      .then(({ body: {postedComment} }) => {
-        expect(postedComment).toEqual(
-          expect.objectContaining({
-            comment_id: expect.any(Number),
-            body: newComment.body,
-            review_id: 1,
-            author: newComment.username,
-            votes: 0,
-            created_at: expect.any(String),
-          })
-        );
-      });
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body: { postedComment } }) => {
+          expect(postedComment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: newComment.body,
+              review_id: 1,
+              author: newComment.username,
+              votes: 0,
+              created_at: expect.any(String),
+            })
+          );
+        });
+    });
+    test("404: passed an invalid review_id", () => {
+      const newComment = {
+        username: "mallionaire",
+        body: "I loved this game!",
+      };
+
+      return request(app)
+        .post("/api/reviews/99999/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe("Review 99999 does not exist");
+          });
+    });
   });
 });

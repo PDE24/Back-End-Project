@@ -19,10 +19,8 @@ exports.postNewReviewComment = (req, res, next) => {
   const commentToAdd = req.body;
   const { review_id } = req.params 
   
-
   insertNewReviewComment(commentToAdd, review_id)
     .then((postedComment) => {
-        console.log(postedComment, "<<<<< controller");
       res.status(201).send({ postedComment });
     })
     .catch((err) => {

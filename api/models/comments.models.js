@@ -34,9 +34,26 @@ exports.selectCommentsByReviewId = async (review_id) => {
   return comments.rows;
 };
 
-exports.insertNewReviewComment = (commentToAdd, reviewId) => {
-    const {username, body} = commentToAdd;
-    return connection.query(`
+exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
+  const { username, body } = commentToAdd;
+
+  const reviewCheck = await connection.query(
+    `
+      SELECT * FROM reviews
+      WHERE review_id = $1
+      `,
+    [reviewId]
+  );
+
+  if (reviewCheck.rowCount === 0) {
+    return Promise.reject({
+      status: 404,
+      msg: `Review ${reviewId} does not exist`,
+    });
+  }
+
+  const inserComment = await connection.query(
+    `
     INSERT INTO comments
         (author, body, review_id)
     VALUES
@@ -44,7 +61,7 @@ exports.insertNewReviewComment = (commentToAdd, reviewId) => {
     RETURNING *
     `,
     [username, body, reviewId]
-    ).then((postedComment)=> {
-        return postedComment.rows[0];
-    })
-}
+  );
+
+  return inserComment.rows[0];
+};
