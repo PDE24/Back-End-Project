@@ -81,6 +81,7 @@ describe("GET /api/reviews/:review_id", () => {
             category: "social deduction",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
+            comment_count: "3"
           },
         });
       });
@@ -100,6 +101,16 @@ describe("GET /api/reviews/:review_id", () => {
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid ID must be a number");
       });
+  });
+  describe("Add comment count property", () => {
+    test("200: returned review has comment count property", () => {
+      return request(app)
+        .get("/api/reviews/3")
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toHaveProperty("comment_count");
+        });
+    });
   });
 });
 describe("PATCH /api/reviews/:review_id", () => {
@@ -178,51 +189,56 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(newVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
+        expect(msg).toBe(
+          "Must provide a number to update votes { inc_votes: <number> }"
+        );
       });
   });
   test("400: passed an update object with no inc_votes key", () => {
-    const newVote = { ink_notes: 2};
+    const newVote = { ink_notes: 2 };
 
     return request(app)
       .patch("/api/reviews/1")
       .send(newVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Must provide a number to update votes { inc_votes: <number> }");
+        expect(msg).toBe(
+          "Must provide a number to update votes { inc_votes: <number> }"
+        );
       });
-  })
+  });
 });
 
-describe('GET /api/users', () => {
-    test('200: returns an array', () => {
-        return request(app)
+describe("GET /api/users", () => {
+  test("200: returns an array", () => {
+    return request(app)
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
         expect(users).toBeInstanceOf(Array);
       });
-    });
-    test("200: array contains objects with username, name and avatar_url keys", () => {
-        return request(app)
-          .get("/api/users")
-          .expect(200)
-          .then(({ body: { users } }) => {
-            users.forEach((user) => {
-              expect(typeof user).toBe("object");
-              expect(user).toHaveProperty("username");
-              expect(user).toHaveProperty("name");
-              expect(user).toHaveProperty("avatar_url");
-            });
-          });
+  });
+  test("200: array contains objects with username, name and avatar_url keys", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        users.forEach((user) => {
+          expect(typeof user).toBe("object");
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
       });
-      test("404: handles bad paths", () => {
-        return request(app)
-          .get("/api/invalid_path")
-          .expect(404)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("Invalid Request");
-          });
+  });
+  test("404: handles bad paths", () => {
+    return request(app)
+      .get("/api/invalid_path")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Request");
       });
+  });
+});
 
-})
+
