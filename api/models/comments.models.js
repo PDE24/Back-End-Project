@@ -33,3 +33,5 @@ exports.selectCommentsByReviewId = async (review_id) => {
 
   return comments.rows;
 };
+
+exports.insertNewReviewComment = () => {}

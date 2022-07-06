@@ -295,5 +295,22 @@ describe("PATCH", () => {
 });
 
 describe("POST", () => {
-  test("", () => {});
+  test("201: new comment posted", () => {
+    const newComment = { username: "mallionaire", body: "I loved this game!"}
+
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(({body: {commentAdded}}) => {
+        expect(commentAdded).toEqual(expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: newComment.body,
+            review_id: 1,
+            author: newComment.username,
+            votes: 0,
+            created_at: expect.any(Number),
+        }))
+    })
+  });
 });
