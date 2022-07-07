@@ -35,7 +35,21 @@ exports.selectCommentsByReviewId = async (review_id) => {
 };
 
 exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
+  if (!commentToAdd.username && !commentToAdd.body) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid comment object",
+    });
+  }
+
   const { username, body } = commentToAdd;
+  
+  if (isNaN(+reviewId)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid, review_id must be a number",
+    });
+  }
 
   const reviewCheck = await connection.query(
     `

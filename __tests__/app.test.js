@@ -333,5 +333,47 @@ describe("POST", () => {
             expect(msg).toBe("Review 99999 does not exist");
           });
     });
+    test('400: review_id is not passed a number', () => {
+      const newComment = {
+        username: "mallionaire",
+        body: "I loved this game!",
+      };
+
+      return request(app)
+        .post("/api/reviews/not_a_number/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe("Invalid, review_id must be a number");
+          });
+    });
+    test('404: Username does not exist', () => {
+      const newComment = {
+        username: "not_a_user",
+        body: "I loved this game!",
+      };
+
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe("User does not exist");
+          });
+    });
+    test('400: new comment doesnt have username or body key', () => {
+      const newComment = {
+        something1: "mallionaire",
+        something2: "I loved this game!",
+      };
+
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe("Invalid comment object");
+          });
+    });
   });
 });
