@@ -1,6 +1,7 @@
 const {
   selectCommentsByReviewId,
   insertNewReviewComment,
+  deleteComment,
 } = require("../models/comments.models");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -17,8 +18,8 @@ exports.getCommentsByReviewId = (req, res, next) => {
 
 exports.postNewReviewComment = (req, res, next) => {
   const commentToAdd = req.body;
-  const { review_id } = req.params 
-  
+  const { review_id } = req.params;
+
   insertNewReviewComment(commentToAdd, review_id)
     .then((postedComment) => {
       res.status(201).send({ postedComment });
@@ -28,3 +29,15 @@ exports.postNewReviewComment = (req, res, next) => {
     });
 };
 
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  console.log(comment_id);
+
+  deleteComment()
+    .then(() => {
+      res.status(201);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};

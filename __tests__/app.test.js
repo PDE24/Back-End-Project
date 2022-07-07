@@ -380,7 +380,7 @@ describe("POST", () => {
 
 describe("DELETE", () => {
   describe("/api/comments/:comment_id", () => {
-    test("204: delete the given comment", () => {
+    test.only("204: delete the given comment", () => {
       return request(app)
         .delete("/api/comments/1")
         .expect(204)

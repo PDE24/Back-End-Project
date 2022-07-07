@@ -94,3 +94,7 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
 
   return insertedComment.rows[0];
 };
+
+exports.deleteComment = async () => {
+  
+}
