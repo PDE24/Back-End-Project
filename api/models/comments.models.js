@@ -95,6 +95,22 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
   return insertedComment.rows[0];
 };
 
-exports.deleteComment = async () => {
-  
-}
+exports.deleteComment = async (comment_id) => {
+  const deleteQuery = await connection.query(
+    `
+  DELETE FROM comments
+  WHERE comment_id = $1
+  RETURNING *
+  `,
+    [comment_id]
+  );
+
+  if (deleteQuery.rowCount === 1) {
+    return deleteQuery;
+  }
+
+  return Promise.reject({
+    status: 404,
+    msg: `Comment ${comment_id} does not exist`,
+  });
+};

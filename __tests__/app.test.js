@@ -388,5 +388,21 @@ describe("DELETE", () => {
           expect(body).toEqual({});
         });
     });
+    test.only("404: comment does not exist", () => {
+      return request(app)
+        .delete("/api/comments/99999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Comment 99999 does not exist");
+        });
+    });
+    test.only("400: when passes not a number as comment_id", () => {
+      return request(app)
+        .delete("/api/comments/not_a_number")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid ID must be a number");
+        });
+    });
   });
 });

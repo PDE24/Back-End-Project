@@ -31,11 +31,10 @@ exports.postNewReviewComment = (req, res, next) => {
 
 exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
-  console.log(comment_id);
 
-  deleteComment()
+  deleteComment(Number(comment_id))
     .then(() => {
-      res.status(201);
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);
