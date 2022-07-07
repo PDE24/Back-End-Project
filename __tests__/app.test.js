@@ -358,7 +358,7 @@ describe("POST", () => {
         .send(newComment)
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("User does not exist");
+          expect(msg).toBe("User not_a_user does not exist");
         });
     });
     test("400: new comment doesn't have username or body key", () => {

@@ -51,6 +51,21 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
     });
   }
 
+  const userCheck = await connection.query(
+    `
+    SELECT * FROM users
+    WHERE username = $1
+    `,
+    [username]
+  );
+
+  if (userCheck.rowCount === 0) {
+    return Promise.reject({
+      status: 404,
+      msg: `User ${username} does not exist`,
+    });
+  }
+
   const reviewCheck = await connection.query(
     `
       SELECT * FROM reviews
@@ -66,7 +81,7 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
     });
   }
 
-  const inserComment = await connection.query(
+  const insertedComment = await connection.query(
     `
     INSERT INTO comments
         (author, body, review_id)
@@ -77,5 +92,5 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
     [username, body, reviewId]
   );
 
-  return inserComment.rows[0];
+  return insertedComment.rows[0];
 };
