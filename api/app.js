@@ -18,6 +18,7 @@ const {
 const {
   getCommentsByReviewId,
   postNewReviewComment,
+  deleteCommentById,
 } = require("./controllers/comments.controllers");
 
 const app = express();
@@ -33,6 +34,8 @@ app.get("/api/users", getUsers);
 app.patch("/api/reviews/:review_id", patchReviewVotes);
 
 app.post("/api/reviews/:review_id/comments", postNewReviewComment);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.use("*", handleInvalidPaths);
 app.use(handleCustomErrors);
