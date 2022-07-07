@@ -184,13 +184,79 @@ describe("GET", () => {
           });
         });
     });
-    test("200: reviews are sorted by created_at in descending order", () => {
+    test("200: by default reviews are sorted by created_at in descending order", () => {
       return request(app)
         .get("/api/reviews")
         .expect(200)
         .then(({ body: { reviews } }) => {
           expect(reviews.length).toBeGreaterThanOrEqual(1);
           expect(reviews).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("200: reviews sorted by ASC if passed as query", () => {
+      return request(app)
+        .get("/api/reviews?order=ASC")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews.length).toBeGreaterThanOrEqual(1);
+          expect(reviews).toBeSortedBy("created_at");
+        });
+    });
+    test("400: passed invalid order", () => {
+      return request(app)
+        .get("/api/reviews?order=order_it")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid order, use either asc or desc");
+        });
+    });
+    test('200: sorts by column when passed valid query', () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews.length).toBeGreaterThanOrEqual(1);
+          expect(reviews).toBeSortedBy("title", { descending: true });
+        });
+    });
+    test('400: passed invalid sort_by', () => {
+      return request(app)
+        .get("/api/reviews?sort_by=sort_it")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid sort_by passed");
+        });
+    });
+    test('200: filters by category when passed vailid query', () => {
+      return request(app)
+        .get("/api/reviews?category=dexterity")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews.length).toBe(1);
+          expect(reviews).toBeSortedBy("created_at", { descending: true });
+          reviews.forEach((review) => {
+            expect(review).toHaveProperty('category', 'dexterity')
+          })
+        });
+    });
+    test('400: passed an invalid categories', () => {
+      return request(app)
+        .get("/api/reviews?category=not_a_category")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Category not_a_category does not exist");
+        });
+    });
+    test('200: accepts multiple queries', () => {
+      return request(app)
+        .get("/api/reviews?order=asc&sort_by=title&category=social%20deduction")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews.length).toBe(11);
+          expect(reviews).toBeSortedBy("title");
+          reviews.forEach((review) => {
+            expect(review).toHaveProperty('category', 'social deduction')
+          })
         });
     });
   });

@@ -28,10 +28,10 @@ exports.patchReviewVotes = (req, res, next) => {
     });
 };
 
-
 exports.getAllReviews = (req, res, next) => {
+  const { order, sort_by, category } = req.query;
   
-  selectAllReviews()
+  selectAllReviews(order, sort_by, category)
     .then((reviews) => {
       res.status(200).send({ reviews });
     })
@@ -39,4 +39,3 @@ exports.getAllReviews = (req, res, next) => {
       next(err);
     });
 };
-
