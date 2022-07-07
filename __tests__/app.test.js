@@ -330,10 +330,10 @@ describe("POST", () => {
         .send(newComment)
         .expect(404)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe("Review 99999 does not exist");
-          });
+          expect(msg).toBe("Review 99999 does not exist");
+        });
     });
-    test('400: review_id is not passed a number', () => {
+    test("400: review_id is not passed a number", () => {
       const newComment = {
         username: "mallionaire",
         body: "I loved this game!",
@@ -344,10 +344,10 @@ describe("POST", () => {
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe("Invalid, review_id must be a number");
-          });
+          expect(msg).toBe("Invalid, review_id must be a number");
+        });
     });
-    test('404: Username does not exist', () => {
+    test("404: Username does not exist", () => {
       const newComment = {
         username: "not_a_user",
         body: "I loved this game!",
@@ -358,10 +358,10 @@ describe("POST", () => {
         .send(newComment)
         .expect(404)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe("User does not exist");
-          });
+          expect(msg).toBe("User does not exist");
+        });
     });
-    test('400: new comment doesnt have username or body key', () => {
+    test("400: new comment doesn't have username or body key", () => {
       const newComment = {
         something1: "mallionaire",
         something2: "I loved this game!",
@@ -372,8 +372,8 @@ describe("POST", () => {
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe("Invalid comment object");
-          });
+          expect(msg).toBe("Invalid comment object");
+        });
     });
   });
 });

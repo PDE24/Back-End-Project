@@ -43,7 +43,7 @@ exports.insertNewReviewComment = async (commentToAdd, reviewId) => {
   }
 
   const { username, body } = commentToAdd;
-  
+
   if (isNaN(+reviewId)) {
     return Promise.reject({
       status: 400,
