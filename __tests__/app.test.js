@@ -195,12 +195,12 @@ describe("GET", () => {
     });
   });
 
-  describe("/api", () => {
+  describe.only("/api", () => {
     test("200: returns json file", () => {
       return request(app)
         .get("/api")
-        .then((file) => {
-          expect(file).toEqual(
+        .then(({body: {file}}) => {
+          expect(JSON.parse(file)).toEqual(
             expect.objectContaining({
               "GET /api": expect.any(Object),
               "GET /api/categories": expect.any(Object),
@@ -216,6 +216,7 @@ describe("GET", () => {
         });
     });
   });
+  
 });
 
 describe("PATCH", () => {
