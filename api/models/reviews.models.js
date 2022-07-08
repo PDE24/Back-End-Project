@@ -58,8 +58,8 @@ exports.selectAllReviews = async (
   sort_by = "created_at",
   category
 ) => {
-  validOrder = ["ASC", "DESC", "asc", "desc"];
-  validSort = ["title", "category", "designer", "owner", "created_at", "votes"];
+  const validOrder = ["ASC", "DESC", "asc", "desc"];
+  const validSort = ["title", "category", "designer", "owner", "created_at", "votes"];
 
   if (!validSort.includes(sort_by)) {
     return Promise.reject({
