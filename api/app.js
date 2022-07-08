@@ -21,10 +21,13 @@ const {
   deleteCommentById,
 } = require("./controllers/comments.controllers");
 
+const { getApi } = require("./controllers/api.controllers");
+
 const app = express();
 
 app.use(express.json());
 
+app.get("/api", getApi);
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
