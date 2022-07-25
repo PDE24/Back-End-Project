@@ -6,7 +6,7 @@
 
 This is an API for a backend server and PSQL database. The api responds to specific request based on the endpoints provided.
 
-The api accepts the following endpoints...
+### The api accepts the following endpoints...
 
 **GET**
 
